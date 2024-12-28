@@ -3,14 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import BlogForm from '@/components/BlogForm'
-
-interface Blog {
-  title: string
-  content: string
-  excerpt: string
-  coverImage: string
-  published: boolean
-}
+import { Blog } from '@/types/blog'
 
 export default function EditBlogPage() {
   const params = useParams()
@@ -26,7 +19,11 @@ export default function EditBlogPage() {
         const data = await response.json()
 
         if (response.ok) {
-          setBlog(data)
+          setBlog({
+            ...data,
+            createdAt: new Date(data.createdAt),
+            updatedAt: new Date(data.updatedAt)
+          })
         } else {
           setError(data.error)
         }

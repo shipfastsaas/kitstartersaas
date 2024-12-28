@@ -1,43 +1,56 @@
-import { clientPromise } from './mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import { Blog, BlogInput, UpdateBlogInput } from '@/types/blog'
+import { clientPromise } from './mongodb'
 
-export async function getCollection(collectionName: string) {
+async function getCollection(name: string) {
   const client = await clientPromise
   const db = client.db()
-  return db.collection(collectionName)
+  return db.collection(name)
 }
 
-export async function createBlog(data: BlogInput) {
+export async function createBlog(blogData: BlogInput): Promise<Blog> {
   const collection = await getCollection('blogs')
-  return collection.insertOne(data)
-}
-
-export async function updateBlog(slug: string, data: UpdateBlogInput) {
-  console.log('updateBlog - Input:', { slug, data })
-  const collection = await getCollection('blogs')
-  try {
-    // Exclure _id des données à mettre à jour
-    const { _id, ...updateData } = data as any
-    const result = await collection.updateOne(
-      { slug },
-      { $set: updateData }
-    )
-    console.log('updateBlog - Result:', result)
-    return result
-  } catch (error) {
-    console.error('updateBlog - Error:', error)
-    throw error
+  const now = new Date()
+  
+  const blog = {
+    ...blogData,
+    slug: blogData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    createdAt: now,
+    updatedAt: now,
   }
+
+  const result = await collection.insertOne(blog)
+  return {
+    ...blog,
+    _id: result.insertedId.toString(),
+  } as Blog
 }
 
-export async function deleteBlog(slug: string) {
+export async function updateBlog(slug: string, blogData: UpdateBlogInput): Promise<Blog | null> {
   const collection = await getCollection('blogs')
-  return collection.deleteOne({ slug })
+  const result = await collection.findOneAndUpdate(
+    { slug },
+    { $set: blogData }
+  )
+
+  if (!result) return null
+
+  const updatedBlog = await getBlog(slug)
+  return updatedBlog
 }
 
 export async function getBlog(slug: string): Promise<Blog | null> {
   const collection = await getCollection('blogs')
-  return collection.findOne({ slug })
+  const result = await collection.findOne({ slug })
+  
+  if (!result) return null
+
+  return {
+    ...result,
+    _id: result._id.toString(),
+    createdAt: new Date(result.createdAt),
+    updatedAt: new Date(result.updatedAt),
+  } as Blog
 }
 
 export async function getBlogs(page = 1, limit = 10, search = '') {
@@ -45,12 +58,7 @@ export async function getBlogs(page = 1, limit = 10, search = '') {
   const skip = (page - 1) * limit
 
   const query = search
-    ? {
-        $or: [
-          { title: { $regex: search, $options: 'i' } },
-          { content: { $regex: search, $options: 'i' } },
-        ],
-      }
+    ? { title: { $regex: search, $options: 'i' } }
     : {}
 
   const [blogs, total] = await Promise.all([
@@ -64,8 +72,20 @@ export async function getBlogs(page = 1, limit = 10, search = '') {
   ])
 
   return {
-    blogs,
+    blogs: blogs.map((blog) => ({
+      ...blog,
+      _id: blog._id.toString(),
+      createdAt: new Date(blog.createdAt),
+      updatedAt: new Date(blog.updatedAt),
+    })) as Blog[],
+    total,
+    page,
     totalPages: Math.ceil(total / limit),
-    currentPage: page,
   }
+}
+
+export async function deleteBlog(slug: string): Promise<boolean> {
+  const collection = await getCollection('blogs')
+  const result = await collection.deleteOne({ slug })
+  return result.deletedCount === 1
 }
