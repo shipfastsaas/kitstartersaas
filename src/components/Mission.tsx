@@ -48,7 +48,10 @@ export default function Mission() {
             </span>
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            We believe that developers should focus on building unique features that matter to their users, not reinventing the wheel. Our mission is to provide the tools and foundation that make this possible.
+            &quot;Notre mission est de fournir des solutions SaaS innovantes qui
+            simplifient la vie des entrepreneurs. Nous croyons qu&#39;avec les bons
+            outils, chaque entreprise peut prospérer dans le monde numérique
+            d&#39;aujourd&#39;hui.&quot;
           </p>
         </div>
 

@@ -1,4 +1,5 @@
 import { clientPromise } from './mongodb'
+import { Blog, BlogInput, UpdateBlogInput } from '@/types/blog'
 
 export async function getCollection(collectionName: string) {
   const client = await clientPromise
@@ -6,17 +7,17 @@ export async function getCollection(collectionName: string) {
   return db.collection(collectionName)
 }
 
-export async function createBlog(data: any) {
+export async function createBlog(data: BlogInput) {
   const collection = await getCollection('blogs')
   return collection.insertOne(data)
 }
 
-export async function updateBlog(slug: string, data: any) {
+export async function updateBlog(slug: string, data: UpdateBlogInput) {
   console.log('updateBlog - Input:', { slug, data })
   const collection = await getCollection('blogs')
   try {
     // Exclure _id des données à mettre à jour
-    const { _id, ...updateData } = data
+    const { _id, ...updateData } = data as any
     const result = await collection.updateOne(
       { slug },
       { $set: updateData }
@@ -34,7 +35,7 @@ export async function deleteBlog(slug: string) {
   return collection.deleteOne({ slug })
 }
 
-export async function getBlog(slug: string) {
+export async function getBlog(slug: string): Promise<Blog | null> {
   const collection = await getCollection('blogs')
   return collection.findOne({ slug })
 }

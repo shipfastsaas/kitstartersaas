@@ -1,18 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { Blog, BlogInput } from '@/types/blog'
 
 interface BlogFormProps {
-  initialData?: {
-    title: string
-    content: string
-    excerpt: string
-    coverImage: string
-    published: boolean
-  }
+  initialData?: Blog
   slug?: string
 }
 
@@ -20,13 +15,12 @@ export default function BlogForm({ initialData, slug }: BlogFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    excerpt: '',
-    coverImage: '',
-    published: false,
-    ...initialData,
+  const [formData, setFormData] = useState<BlogInput>({
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    excerpt: initialData?.excerpt || '',
+    coverImage: initialData?.coverImage || '',
+    published: initialData?.published || false,
   })
 
   const editor = useEditor({
@@ -64,8 +58,8 @@ export default function BlogForm({ initialData, slug }: BlogFormProps) {
       } else {
         setError(data.error)
       }
-    } catch (err) {
-      setError('Une erreur est survenue')
+    } catch (error) {
+      setError('Une erreur est survenue lors de l&apos;enregistrement')
     } finally {
       setLoading(false)
     }
@@ -175,7 +169,7 @@ export default function BlogForm({ initialData, slug }: BlogFormProps) {
           htmlFor="published"
           className="block text-sm font-medium leading-6 text-gray-900"
         >
-          Publier l'article
+          Publier l&apos;article
         </label>
       </div>
 

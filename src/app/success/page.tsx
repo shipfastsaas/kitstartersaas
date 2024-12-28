@@ -1,11 +1,7 @@
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing Stripe Secret Key')
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2023-10-16',
 })
 
@@ -14,7 +10,11 @@ export default async function SuccessPage({
 }: {
   searchParams: { session_id: string }
 }) {
-  const sessionId = await Promise.resolve(searchParams?.session_id)
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('Missing Stripe Secret Key')
+  }
+
+  const sessionId = searchParams?.session_id
 
   if (!sessionId) {
     redirect('/')
@@ -44,7 +44,7 @@ export default async function SuccessPage({
               Accéder au Tableau de bord
             </a>
             <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
-              Retour à l'accueil <span aria-hidden="true">→</span>
+              Retour à l&apos;accueil <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>

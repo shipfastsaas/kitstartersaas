@@ -5,8 +5,8 @@ import * as Icons from '@heroicons/react/24/outline'
 import EmailModal from './EmailModal'
 import { loadStripe } from '@stripe/stripe-js'
 
-// Make sure to add your publishable key
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+// Make sure to add your publishable key in .env.local
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 const plans = [
   {

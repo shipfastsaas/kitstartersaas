@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getBlog, updateBlog, deleteBlog } from '@/lib/db'
+import { Blog, UpdateBlogInput } from '@/types/blog'
 
 export async function GET(
   request: Request,
@@ -17,10 +18,11 @@ export async function GET(
 
     console.log('GET - Blog found:', blog)
     return NextResponse.json(blog)
-  } catch (error: any) {
+  } catch (error) {
     console.error('GET - Error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Error fetching blog'
     return NextResponse.json(
-      { error: error.message || 'Error fetching blog' },
+      { error: errorMessage },
       { status: 500 }
     )
   }
@@ -32,7 +34,7 @@ export async function PUT(
 ) {
   try {
     const slug = (await params).slug
-    const body = await request.json()
+    const body = await request.json() as UpdateBlogInput
     console.log('PUT - Updating blog with slug:', slug)
     console.log('PUT - Update data:', body)
 
@@ -51,10 +53,11 @@ export async function PUT(
     const updatedBlog = await getBlog(slug)
     console.log('PUT - Updated blog:', updatedBlog)
     return NextResponse.json(updatedBlog)
-  } catch (error: any) {
+  } catch (error) {
     console.error('PUT - Error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Error updating blog'
     return NextResponse.json(
-      { error: error.message || 'Error updating blog' },
+      { error: errorMessage },
       { status: 500 }
     )
   }
@@ -77,10 +80,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: 'Blog deleted successfully' })
-  } catch (error: any) {
+  } catch (error) {
     console.error('DELETE - Error:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Error deleting blog'
     return NextResponse.json(
-      { error: error.message || 'Error deleting blog' },
+      { error: errorMessage },
       { status: 500 }
     )
   }

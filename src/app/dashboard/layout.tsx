@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import * as Icons from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 const navigation = [
   { name: 'Overview', href: '/dashboard', icon: Icons.HomeIcon },
@@ -30,7 +31,9 @@ export default function DashboardLayout({
             <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white pt-5 pb-4">
               <div className="flex items-center justify-between px-4">
                 <div className="flex items-center">
-                  <img
+                  <Image
+                    width={32}
+                    height={32}
                     className="h-8 w-auto"
                     src="/logo.png"
                     alt="Your Company"
@@ -81,7 +84,9 @@ export default function DashboardLayout({
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
             <div className="flex items-center justify-between px-4">
               <div className="flex items-center">
-                <img
+                <Image
+                  width={32}
+                  height={32}
                   className="h-8 w-auto"
                   src="/logo.png"
                   alt="Your Company"
