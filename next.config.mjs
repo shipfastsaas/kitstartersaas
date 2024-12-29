@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
+    serverExternalPackages: ['mongoose']
   },
   webpack: (config) => {
     config.externals = [...config.externals, 'mongoose']
