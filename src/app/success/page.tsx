@@ -1,51 +1,133 @@
-import { redirect } from 'next/navigation'
-import Stripe from 'stripe'
+'use client'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
-})
+import Link from 'next/link'
+import { CheckCircleIcon, ArrowDownTrayIcon, BookOpenIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline'
 
-export default async function SuccessPage({
-  searchParams,
-}: {
-  searchParams: { session_id: string }
-}) {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('Missing Stripe Secret Key')
-  }
-
-  const sessionId = searchParams?.session_id
-
-  if (!sessionId) {
-    redirect('/')
-  }
-
-  const session = await stripe.checkout.sessions.retrieve(sessionId)
-  const customerEmail = session.customer_details?.email
-
+export default function SuccessPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 sm:py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Merci pour votre achat !
-          </h2>
-          {customerEmail && (
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Un email de confirmation a été envoyé à{' '}
-              <span className="font-medium text-purple-600">{customerEmail}</span>
+    <div className="min-h-screen bg-gray-50">
+      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <div className="bg-white px-8 py-12 shadow-xl rounded-2xl">
+          {/* Success Header */}
+          <div className="text-center">
+            <CheckCircleIcon className="mx-auto h-16 w-16 text-green-500" />
+            <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Thank you for your purchase!
+            </h1>
+            <p className="mt-4 text-lg text-gray-600">
+              You now have access to the Next.js SaaS Starter Template. Let's get your startup launched!
             </p>
-          )}
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <a
-              href="/dashboard"
-              className="rounded-md bg-purple-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
-            >
-              Accéder au Tableau de bord
-            </a>
-            <a href="/" className="text-sm font-semibold leading-6 text-gray-900">
-              Retour à l&apos;accueil <span aria-hidden="true">→</span>
-            </a>
+          </div>
+
+          {/* Next Steps */}
+          <div className="mt-12">
+            <h2 className="text-lg font-semibold text-gray-900">Next steps:</h2>
+            <div className="mt-6 space-y-6">
+              {/* GitHub Download */}
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50">
+                    <ArrowDownTrayIcon className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-base font-medium text-gray-900">Download your template</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Get started by downloading your template from GitHub
+                  </p>
+                  <a
+                    href="https://github.com/yourusername/saas-template"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+                  >
+                    Download from GitHub
+                    <ArrowDownTrayIcon className="ml-2 -mr-0.5 h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Documentation */}
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50">
+                    <BookOpenIcon className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-base font-medium text-gray-900">Read the documentation</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Learn how to customize and deploy your SaaS application
+                  </p>
+                  <Link
+                    href="/docs"
+                    className="mt-3 inline-flex items-center text-sm font-semibold text-primary hover:text-primary/90"
+                  >
+                    View documentation
+                    <span aria-hidden="true"> →</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Support */}
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50">
+                    <ChatBubbleLeftRightIcon className="h-6 w-6 text-primary" />
+                  </div>
+                </div>
+                <div className="ml-4">
+                  <h3 className="text-base font-medium text-gray-900">Get support</h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Join our community for support and updates
+                  </p>
+                  <a
+                    href="https://discord.gg/your-discord"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center text-sm font-semibold text-primary hover:text-primary/90"
+                  >
+                    Join Discord community
+                    <span aria-hidden="true"> →</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Features Reminder */}
+          <div className="mt-12 rounded-lg bg-gray-50 px-6 py-8">
+            <h2 className="text-sm font-medium text-gray-900">Included in your purchase:</h2>
+            <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {[
+                'Next.js 13+ App Router',
+                'TypeScript Configuration',
+                'Tailwind CSS Setup',
+                'Authentication System',
+                'Database Integration',
+                'Payment Processing',
+                'Email Templates',
+                'API Routes',
+              ].map((feature) => (
+                <li key={feature} className="flex items-center text-sm text-gray-600">
+                  <CheckCircleIcon className="mr-2 h-5 w-5 text-green-500" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Help Link */}
+          <div className="mt-12 text-center">
+            <p className="text-sm text-gray-600">
+              Need help getting started?{' '}
+              <a
+                href="mailto:support@yourdomain.com"
+                className="font-medium text-primary hover:text-primary/90"
+              >
+                Contact our support team
+              </a>
+            </p>
           </div>
         </div>
       </div>

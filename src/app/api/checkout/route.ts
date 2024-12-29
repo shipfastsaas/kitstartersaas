@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { headers } from 'next/headers'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('La clé secrète Stripe n\'est pas définie')
@@ -9,7 +10,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2023-10-16',
 })
 
-const DOMAIN = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+function getBaseUrl() {
+  const headersList = headers()
+  const host = headersList.get('host') || 'localhost:3000'
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+  return `${protocol}://${host}`
+}
 
 const PLANS = {
   standard: {
@@ -26,6 +32,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { plan, email } = body
+    const baseUrl = getBaseUrl()
 
     if (!plan || !PLANS[plan as keyof typeof PLANS]) {
       return NextResponse.json(
@@ -47,7 +54,7 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       customer: customer?.id,
-      customer_email: !customer ? email : undefined, // Utiliser customer_email si pas de customer existant
+      customer_email: !customer ? email : undefined,
       line_items: [
         {
           price_data: {
@@ -58,14 +65,14 @@ export async function POST(request: Request) {
                 ? 'Complete access with lifetime updates'
                 : 'Complete access with 6 months of updates',
             },
-            unit_amount: selectedPlan.price * 100, // Stripe expects amounts in cents
+            unit_amount: selectedPlan.price * 100,
           },
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: `${DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${DOMAIN}`,
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}`,
       metadata: {
         plan,
       },
