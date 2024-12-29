@@ -21,11 +21,15 @@ export default function HeroSection() {
             <div className="flex items-center gap-x-2">
               <div className="h-6 w-px bg-gray-200" />
               <div className="flex -space-x-2">
-                {[1, 2, 3].map((i) => (
+                {[
+                  'https://avatars.githubusercontent.com/u/1?v=4',
+                  'https://avatars.githubusercontent.com/u/2?v=4',
+                  'https://avatars.githubusercontent.com/u/3?v=4'
+                ].map((avatarUrl, i) => (
                   <div key={i} className="inline-block h-8 w-8 rounded-full bg-gray-100 ring-2 ring-white">
                     <Image
-                      src={`/images/avatar${i}.jpg`}
-                      alt={`User ${i}`}
+                      src={avatarUrl}
+                      alt={`Team member ${i + 1}`}
                       width={32}
                       height={32}
                       className="rounded-full"
@@ -96,9 +100,9 @@ export default function HeroSection() {
           <div className="mt-10 flex flex-col gap-4">
             <p className="text-sm font-semibold text-gray-900">Trusted by innovative startups</p>
             <div className="flex gap-x-8 grayscale opacity-70">
-              <Image src="/images/logo1.svg" alt="Company 1" width={120} height={40} className="h-8 w-auto" />
-              <Image src="/images/logo2.svg" alt="Company 2" width={120} height={40} className="h-8 w-auto" />
-              <Image src="/images/logo3.svg" alt="Company 3" width={120} height={40} className="h-8 w-auto" />
+              <Image src="/images/meta.png" alt="Company 1" width={120} height={40} className="h-8 w-auto" />
+              <Image src="/images/microsoft.png" alt="Company 2" width={120} height={40} className="h-8 w-auto" />
+              <Image src="/images/mac.png" alt="Company 3" width={120} height={40} className="h-8 w-auto" />
             </div>
           </div>
         </div>
@@ -128,7 +132,7 @@ npm run dev
               {/* App preview */}
               <div className="mt-6">
                 <Image
-                  src="/images/preview.png"
+                  src="/images/hero-features.png"
                   alt="App preview"
                   width={1000}
                   height={700}

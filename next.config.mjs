@@ -9,6 +9,9 @@ const nextConfig = {
   experimental: {
     serverExternalPackages: ['mongoose']
   },
+  images: {
+    domains: ['ui-avatars.com', 'randomuser.me', 'avatars.githubusercontent.com'],
+  },
   webpack: (config) => {
     config.externals = [...config.externals, 'mongoose']
     return config
