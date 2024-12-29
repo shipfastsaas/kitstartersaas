@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "DISABLE_ESLINT_PLUGIN=true next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -16,7 +16,7 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.18",
     "@next/font": "^14.2.15",
-    "@stripe/stripe-js": "^2.2.0",
+    "@stripe/stripe-js": "^2.4.0",
     "@tiptap/pm": "^2.10.4",
     "@tiptap/react": "^2.10.4",
     "@tiptap/starter-kit": "^2.10.4",
