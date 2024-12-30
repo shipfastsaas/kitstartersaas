@@ -1,14 +1,21 @@
 import type { Metadata } from 'next'
-import '@fontsource/outfit/400.css'
-import '@fontsource/outfit/500.css'
-import '@fontsource/outfit/600.css'
-import '@fontsource/outfit/700.css'
-import '@fontsource/plus-jakarta-sans/400.css'
-import '@fontsource/plus-jakarta-sans/500.css'
-import '@fontsource/plus-jakarta-sans/600.css'
-import '@fontsource/plus-jakarta-sans/700.css'
 import './globals.css'
 import Header from '@/components/Header'
+
+// Optimiser le chargement des polices
+import { Outfit, Plus_Jakarta_Sans } from 'next/font/google'
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-outfit',
+})
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jakarta',
+})
 
 export const metadata: Metadata = {
   title: 'SaaS Starter Template',
@@ -21,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${outfit.variable} ${jakarta.variable}`}>
       <body className="h-full bg-white font-jakarta antialiased">
         <Header />
         <div className="flex min-h-full flex-col pt-16">
