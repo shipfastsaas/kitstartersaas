@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { usePathname } from 'next/navigation'
 
 const navigation = [
   { name: 'Features', href: '#features' },
@@ -15,6 +16,7 @@ const navigation = [
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +26,7 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Empêcher le défilement du body quand le menu est ouvert
+  // Prevent body scroll when menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden'
@@ -33,10 +35,31 @@ export default function Header() {
     }
   }, [mobileMenuOpen])
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [pathname])
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const href = e.currentTarget.getAttribute('href')
+    if (href?.startsWith('#')) {
+      e.preventDefault()
+      const element = document.querySelector(href)
+      if (element) {
+        const yOffset = -100 // Account for header height
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
+        window.scrollTo({ top: y, behavior: 'smooth' })
+        setMobileMenuOpen(false)
+      }
+    }
+  }
+
   return (
-    <header className={`fixed w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
-    }`}>
+    <header 
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        isScrolled || mobileMenuOpen ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-transparent'
+      }`}
+    >
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
@@ -47,6 +70,7 @@ export default function Header() {
               width={190}
               height={140}
               className="h-8 w-auto"
+              priority
             />
           </Link>
         </div>
@@ -56,6 +80,8 @@ export default function Header() {
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             onClick={() => setMobileMenuOpen(true)}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-menu"
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
@@ -67,6 +93,7 @@ export default function Header() {
             <a
               key={item.name}
               href={item.href}
+              onClick={handleNavClick}
               className="text-sm font-semibold leading-6 text-gray-900 hover:text-primary transition-colors duration-200"
             >
               {item.name}
@@ -90,13 +117,15 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Menu Mobile */}
+      {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 z-[100] lg:hidden ${
+        id="mobile-menu"
+        className={`fixed inset-0 z-[100] lg:hidden transition-all duration-300 ${
           mobileMenuOpen ? 'visible' : 'invisible'
         }`}
+        aria-hidden={!mobileMenuOpen}
       >
-        {/* Fond sombre avec animation de fondu */}
+        {/* Backdrop */}
         <div 
           className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-opacity duration-300 ${
             mobileMenuOpen ? 'opacity-100' : 'opacity-0'
@@ -105,29 +134,30 @@ export default function Header() {
           onClick={() => setMobileMenuOpen(false)}
         />
 
-        {/* Panneau de menu coulissant */}
+        {/* Sliding Panel */}
         <div
-          className={`fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transition-transform duration-300 ease-in-out transform ${
+          className={`fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-xl transition-transform duration-300 ease-out ${
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">Your Company</span>
               <Image
-                src="/logo.png"
+                src="/images/logo.png"
                 alt="Logo"
-                width={32}
-                height={32}
+                width={190}
+                height={140}
                 className="h-8 w-auto"
+                priority
               />
             </Link>
             <button
               type="button"
               className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:text-gray-900 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
             >
-              <span className="sr-only">Close menu</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
@@ -139,7 +169,7 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className="block w-full rounded-lg px-4 py-3 text-base font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={handleNavClick}
                 >
                   {item.name}
                 </a>
