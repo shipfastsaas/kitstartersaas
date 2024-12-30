@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb'
 
 declare global {
-  var _mongoClientPromise: Promise<MongoClient>
+  let _mongoClientPromise: Promise<MongoClient>
 }
 
 if (!process.env.DATABASE_URL) {
