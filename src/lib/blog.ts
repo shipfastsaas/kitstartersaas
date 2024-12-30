@@ -1,11 +1,40 @@
 import { clientPromise, ObjectId } from './mongodb'
+import { Blog } from '@/types/blog'
 
-export async function createPost(data: {
+interface PostData {
   title: string
   content: string
   tags: string[]
   authorId: string
-}) {
+}
+
+interface UpdatePostData {
+  title?: string
+  content?: string
+  tags?: string[]
+  published?: boolean
+}
+
+interface GetPostsOptions {
+  limit?: number
+  skip?: number
+  published?: boolean
+}
+
+interface Post {
+  _id: ObjectId
+  title: string
+  content: string
+  tags: string[]
+  authorId: string
+  slug: string
+  views: number
+  published: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export async function createPost(data: PostData): Promise<Post> {
   const client = await clientPromise
   const db = client.db('saas-template')
   
@@ -21,19 +50,14 @@ export async function createPost(data: {
     published: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-  })
+  }) as Promise<Post>
 }
 
-export async function updatePost(id: string, data: {
-  title?: string
-  content?: string
-  tags?: string[]
-  published?: boolean
-}) {
+export async function updatePost(id: string, data: UpdatePostData): Promise<{ _id: ObjectId } | null> {
   const client = await clientPromise
   const db = client.db('saas-template')
   
-  const updateData: any = {
+  const updateData: UpdatePostData & { updatedAt: Date } = {
     ...data,
     updatedAt: new Date(),
   }
@@ -51,25 +75,21 @@ export async function updatePost(id: string, data: {
   )
 }
 
-export async function deletePost(id: string) {
+export async function deletePost(id: string): Promise<{ deletedCount: number }> {
   const client = await clientPromise
   const db = client.db('saas-template')
   
   return db.collection('posts').deleteOne({ _id: new ObjectId(id) })
 }
 
-export async function getPost(id: string) {
+export async function getPost(id: string): Promise<Post | null> {
   const client = await clientPromise
   const db = client.db('saas-template')
   
-  return db.collection('posts').findOne({ _id: new ObjectId(id) })
+  return db.collection('posts').findOne({ _id: new ObjectId(id) }) as Promise<Post | null>
 }
 
-export async function getPosts(options?: {
-  limit?: number
-  skip?: number
-  published?: boolean
-}) {
+export async function getPosts(options?: GetPostsOptions): Promise<Post[]> {
   const client = await clientPromise
   const db = client.db('saas-template')
   
@@ -81,10 +101,10 @@ export async function getPosts(options?: {
     .sort({ createdAt: -1 })
     .skip(options?.skip || 0)
     .limit(options?.limit || 10)
-    .toArray()
+    .toArray() as Promise<Post[]>
 }
 
-export async function incrementViews(id: string) {
+export async function incrementViews(id: string): Promise<{ _id: ObjectId } | null> {
   const client = await clientPromise
   const db = client.db('saas-template')
   

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createBlog, getBlogs } from '@/lib/db'
+import type { Blog } from '@/types/blog'
 
 export async function POST(request: Request) {
   try {
@@ -11,19 +12,19 @@ export async function POST(request: Request) {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '')
 
-    const result = await createBlog({
+    const blog: Blog = {
       ...body,
       slug,
       createdAt: new Date(),
       updatedAt: new Date(),
-    })
+    }
 
-    return NextResponse.json(result)
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Error creating blog' },
-      { status: 500 }
-    )
+    const result = await createBlog(blog)
+
+    return NextResponse.json({ blog: result })
+  } catch (error) {
+    console.error('Error creating blog:', error)
+    return NextResponse.json({ error: 'Failed to create blog' }, { status: 500 })
   }
 }
 
@@ -36,11 +37,9 @@ export async function GET(request: Request) {
 
     const result = await getBlogs(page, limit, search)
 
-    return NextResponse.json(result)
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Error fetching blogs' },
-      { status: 500 }
-    )
+    return NextResponse.json({ blogs: result })
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+    return NextResponse.json({ error: 'Failed to fetch blogs' }, { status: 500 })
   }
 }

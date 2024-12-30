@@ -48,10 +48,10 @@ export default function Mission() {
             </span>
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            &quot;Notre mission est de fournir des solutions SaaS innovantes qui
-            simplifient la vie des entrepreneurs. Nous croyons qu&#39;avec les bons
+            &ldquo;Notre mission est de fournir des solutions SaaS innovantes qui
+            simplifient la vie des entrepreneurs. Nous croyons qu&rsquo;avec les bons
             outils, chaque entreprise peut prospérer dans le monde numérique
-            d&#39;aujourd&#39;hui.&quot;
+            d&rsquo;aujourd&rsquo;hui.&rdquo;
           </p>
         </div>
 
@@ -117,10 +117,10 @@ export default function Mission() {
                     Riadh, 27 - CEO of Kitstarter
                   </p>
                   <p className="mt-4 text-gray-600 leading-relaxed max-w-2xl">
-                    "As a developer myself, I understand the challenges of building modern SaaS applications. 
-                    That's why I created Kitstarter - to help developers focus on what matters most: building 
+                    &ldquo;As a developer myself, I understand the challenges of building modern SaaS applications. 
+                    That&rsquo;s why I created Kitstarter - to help developers focus on what matters most: building 
                     unique features that bring value to their users. Our mission is to make SaaS development 
-                    accessible, efficient, and enjoyable for everyone."
+                    accessible, efficient, and enjoyable for everyone.&rdquo;
                   </p>
                   <div className="mt-6 flex justify-center sm:justify-start space-x-4">
                     <a
@@ -167,7 +167,7 @@ export default function Mission() {
                 Join us in revolutionizing SaaS development
               </h3>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-                Whether you're a solo developer or part of a team, our starter kit provides the foundation you need to build exceptional products. Join our community and be part of the next generation of SaaS builders.
+                Whether you&rsquo;re a solo developer or part of a team, our starter kit provides the foundation you need to build exceptional products. Join our community and be part of the next generation of SaaS builders.
               </p>
               <div className="mt-8 flex justify-center gap-4">
                 <a

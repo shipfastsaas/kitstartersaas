@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -75,10 +76,13 @@ export default function BlogsTable({
                 {blogs.map((blog) => (
                   <tr key={blog._id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 sm:pl-6">
-                      <img
-                        src={blog.coverImage}
+                      {/* Remplacer img par Image de next/image */}
+                      <Image
+                        src={blog.coverImage || '/placeholder.jpg'}
                         alt={blog.title}
-                        className="h-12 w-12 rounded-md object-cover"
+                        width={48}
+                        height={48}
+                        className="h-12 w-12 rounded-full"
                       />
                     </td>
                     <td className="whitespace-nowrap px-3 py-4">
