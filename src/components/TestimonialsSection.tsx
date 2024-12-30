@@ -49,9 +49,11 @@ export default function TestimonialsSection() {
                     <StarIcon key={i} className="h-5 w-5 text-yellow-400" />
                   ))}
                 </div>
-                <p className="mt-4 font-jakarta text-base leading-6 text-gray-600">
-                  "{testimonial.quote}"
-                </p>
+                <blockquote>
+                  <p className="mt-4 font-jakarta text-base leading-6 text-gray-600">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+                </blockquote>
               </div>
               <div className="mt-6 flex items-center gap-x-4">
                 <Image

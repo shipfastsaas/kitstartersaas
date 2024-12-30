@@ -32,7 +32,7 @@ export default function HowItWorksSection() {
         </div>
         
         <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 gap-x-8 gap-y-12 sm:max-w-none sm:grid-cols-3">
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <div
               key={step.title}
               className="relative pl-16"

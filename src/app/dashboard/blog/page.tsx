@@ -29,7 +29,7 @@ export default function BlogPage() {
       } else {
         setError(data.error)
       }
-    } catch (err) {
+    } catch (_) {
       setError('Error fetching blogs')
     } finally {
       setLoading(false)
@@ -48,7 +48,7 @@ export default function BlogPage() {
       } else {
         setError(data.error)
       }
-    } catch (err) {
+    } catch (_) {
       setError('Error deleting blog')
     }
   }

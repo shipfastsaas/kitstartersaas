@@ -86,7 +86,7 @@ export default function EmailModal({
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
                         Please enter your email to continue with the {planName} plan
-                        purchase. We'll send your receipt to this address.
+                        purchase. We&apos;ll send you an email with the download link
                       </p>
                     </div>
                   </div>

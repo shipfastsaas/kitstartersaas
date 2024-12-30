@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb'
+
 export interface Blog {
-  _id?: string
+  _id?: ObjectId
   title: string
   slug: string
   content: string
@@ -19,5 +21,5 @@ export interface BlogInput {
 }
 
 export interface UpdateBlogInput extends Partial<BlogInput> {
-  updatedAt: Date
+  published?: boolean
 }

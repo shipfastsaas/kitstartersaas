@@ -1,10 +1,10 @@
-import Image from 'next/image'
 import * as Icons from '@heroicons/react/24/outline'
+import React from 'react'
 
 interface Feature {
   name: string;
   description: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   gradient: string;
   comingSoon?: boolean;
 }

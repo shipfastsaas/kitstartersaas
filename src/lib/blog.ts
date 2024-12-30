@@ -1,114 +1,91 @@
-import { clientPromise, ObjectId } from './mongodb'
-import { Blog } from '@/types/blog'
+import { ObjectId } from 'mongodb'
+import { clientPromise } from './mongodb'
 
-interface PostData {
+export interface Post {
+  _id?: ObjectId
   title: string
   content: string
+  slug: string
   tags: string[]
-  authorId: string
+  published: boolean
+  createdAt?: Date
+  updatedAt?: Date
+  views?: number
 }
 
-interface UpdatePostData {
-  title?: string
-  content?: string
-  tags?: string[]
+export interface GetPostsOptions {
   published?: boolean
-}
-
-interface GetPostsOptions {
   limit?: number
   skip?: number
-  published?: boolean
-}
-
-interface Post {
-  _id: ObjectId
-  title: string
-  content: string
-  tags: string[]
-  authorId: string
-  slug: string
-  views: number
-  published: boolean
-  createdAt: Date
-  updatedAt: Date
-}
-
-export async function createPost(data: PostData): Promise<Post> {
-  const client = await clientPromise
-  const db = client.db('saas-template')
-  
-  const slug = data.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-
-  return db.collection('posts').insertOne({
-    ...data,
-    slug,
-    views: 0,
-    published: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }) as Promise<Post>
-}
-
-export async function updatePost(id: string, data: UpdatePostData): Promise<{ _id: ObjectId } | null> {
-  const client = await clientPromise
-  const db = client.db('saas-template')
-  
-  const updateData: UpdatePostData & { updatedAt: Date } = {
-    ...data,
-    updatedAt: new Date(),
-  }
-
-  if (data.title) {
-    updateData.slug = data.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-  }
-
-  return db.collection('posts').updateOne(
-    { _id: new ObjectId(id) },
-    { $set: updateData }
-  )
-}
-
-export async function deletePost(id: string): Promise<{ deletedCount: number }> {
-  const client = await clientPromise
-  const db = client.db('saas-template')
-  
-  return db.collection('posts').deleteOne({ _id: new ObjectId(id) })
 }
 
 export async function getPost(id: string): Promise<Post | null> {
   const client = await clientPromise
-  const db = client.db('saas-template')
-  
-  return db.collection('posts').findOne({ _id: new ObjectId(id) }) as Promise<Post | null>
+  const db = client.db()
+  return db.collection<Post>('posts').findOne({ _id: new ObjectId(id) })
 }
 
 export async function getPosts(options?: GetPostsOptions): Promise<Post[]> {
   const client = await clientPromise
-  const db = client.db('saas-template')
+  const db = client.db()
   
   const query = options?.published !== undefined ? { published: options.published } : {}
   
   return db
-    .collection('posts')
+    .collection<Post>('posts')
     .find(query)
-    .sort({ createdAt: -1 })
-    .skip(options?.skip || 0)
-    .limit(options?.limit || 10)
-    .toArray() as Promise<Post[]>
+    .skip(options?.skip ?? 0)
+    .limit(options?.limit ?? 10)
+    .toArray()
 }
 
-export async function incrementViews(id: string): Promise<{ _id: ObjectId } | null> {
+export async function createPost(data: Omit<Post, '_id' | 'createdAt' | 'updatedAt'>): Promise<Post> {
   const client = await clientPromise
-  const db = client.db('saas-template')
+  const db = client.db()
   
-  return db.collection('posts').updateOne(
+  const post = {
+    ...data,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    views: 0
+  }
+  
+  const result = await db.collection<Post>('posts').insertOne(post)
+  return { ...post, _id: result.insertedId }
+}
+
+export async function updatePost(id: string, data: Partial<Post>): Promise<Post | null> {
+  const client = await clientPromise
+  const db = client.db()
+  
+  const update = {
+    $set: {
+      ...data,
+      updatedAt: new Date()
+    }
+  }
+
+  const result = await db.collection<Post>('posts').findOneAndUpdate(
+    { _id: new ObjectId(id) },
+    update,
+    { returnDocument: 'after' }
+  )
+
+  if (!result) return null
+  return result as unknown as Post
+}
+
+export async function deletePost(id: string): Promise<boolean> {
+  const client = await clientPromise
+  const db = client.db()
+  const result = await db.collection('posts').deleteOne({ _id: new ObjectId(id) })
+  return result.deletedCount > 0
+}
+
+export async function incrementViews(id: string): Promise<void> {
+  const client = await clientPromise
+  const db = client.db()
+  await db.collection('posts').updateOne(
     { _id: new ObjectId(id) },
     { $inc: { views: 1 } }
   )

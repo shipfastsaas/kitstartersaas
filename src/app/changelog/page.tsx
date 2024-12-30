@@ -100,7 +100,7 @@ export default function Changelog() {
             </span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 max-w-[40ch] mx-auto">
-            Keep track of our latest updates and see what's coming next. We're constantly improving and adding new features.
+            Keep track of our latest updates and see what&apos;s coming next. We&apos;re constantly improving and adding new features.
           </p>
         </div>
 
