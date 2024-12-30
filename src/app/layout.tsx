@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Script from 'next/script'
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google'
+import GoogleAnalytics from '@/components/GoogleAnalytics'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -55,7 +56,10 @@ export default function RootLayout({
         {/* End Google Tag Manager (noscript) */}
         <Header />
         <div className="flex min-h-full flex-col pt-16">
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            <GoogleAnalytics />
+            {children}
+          </main>
         </div>
       </body>
     </html>
