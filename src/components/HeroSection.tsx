@@ -21,19 +21,17 @@ export default function HeroSection() {
             <div className="flex items-center gap-x-2">
               <div className="h-6 w-px bg-gray-200" />
               <div className="flex -space-x-2">
-                {[
-                  'https://avatars.githubusercontent.com/u/1?v=4',
-                  'https://avatars.githubusercontent.com/u/2?v=4',
-                  'https://avatars.githubusercontent.com/u/3?v=4'
-                ].map((avatarUrl, i) => (
-                  <div key={i} className="inline-block h-8 w-8 rounded-full bg-gray-100 ring-2 ring-white">
-                    <Image
-                      src={avatarUrl}
-                      alt={`Team member ${i + 1}`}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
+                {['JD', 'SM', 'AK'].map((initials, i) => (
+                  <div 
+                    key={i} 
+                    className="inline-block h-8 w-8 rounded-full ring-2 ring-white relative overflow-hidden"
+                    style={{
+                      background: `linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to))`,
+                    }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center text-sm font-semibold text-white">
+                      {initials}
+                    </div>
                   </div>
                 ))}
                 <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-white">

@@ -1,22 +1,33 @@
 import Image from "next/image";
 import HeroSection from '@/components/HeroSection'
 import Features from '@/components/Features'
-import Pricing from '@/components/Pricing'
 import Testimonials from '@/components/Testimonials'
-import FAQ from '@/components/FAQ'
+import Pricing from '@/components/Pricing'
 import Mission from '@/components/Mission'
 import Footer from '@/components/Footer'
 import CTASection from '@/components/CTASection'
+import HowItWorksSection from '@/components/HowItWorksSection'
+import ComparisonSection from '@/components/ComparisonSection'
+import TestimonialsSection from '@/components/TestimonialsSection'
+import FaqSection from '@/components/FaqSection'
+import CountdownTimer from '@/components/ui/CountdownTimer'
+import ScrollProgress from '@/components/ui/ScrollProgress'
+import SalesNotification from '@/components/ui/SalesNotification'
+import LiveChat from '@/components/ui/LiveChat'
 
 export default function Home() {
   return (
     <main>
+      <ScrollProgress />
+      <SalesNotification />
+      <LiveChat />
       <HeroSection />
       <Features />
+      <HowItWorksSection />
+      <ComparisonSection />
+      <TestimonialsSection />
       <Mission />
-      <Testimonials />
-      <Pricing />
-      <FAQ />
+      <FaqSection />
       <CTASection />
       <Footer />
     </main>
